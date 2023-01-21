@@ -46,12 +46,12 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   createFriend(req, res) {
-    Friend.create(req.body)
+    User.findOneAndUpdate({ _id: req.params.userId }, { $addToSet: {friends: req.params.friendId }})
       .then((dbUserData) => res.json(dbUserData))
       .catch((err) => res.status(500).json(err));
   },
   deleteFriend(req, res) {
-    User.findOneAndDelete({ _id: req.params.userId })
+    User.findOneUpdate({ _id: req.params.userId }, { $pull: {friends: req.params.friendId }})
       .then((friend) =>
         !friend
           ? res.status(404).json({ message: 'No user with that ID' })
